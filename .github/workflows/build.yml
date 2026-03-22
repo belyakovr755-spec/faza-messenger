@@ -20,8 +20,6 @@ jobs:
         uses: android-actions/setup-android@v3
       - name: Install dependencies
         run: pip install flet telethon
-      - name: Init Flet
-        run: flet create .
       - name: Build APK
         run: flet build apk --yes
       - name: Upload APK
