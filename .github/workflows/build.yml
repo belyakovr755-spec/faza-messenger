@@ -19,15 +19,31 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
       - name: Install dependencies
+        run: pip install flet telethon
+      - name: Create App Structure
         run: |
-          pip install flet telethon
+          flet create .
+          # Принудительно записываем код мессенджера в main.py
+          cat <<EOF > main.py
+          import flet as ft
+          def main(page: ft.Page):
+              page.title = "Faza Messenger"
+              page.theme_mode = ft.ThemeMode.DARK
+              chat = ft.Column(expand=True, scroll=ft.ScrollMode.ALWAYS)
+              msg = ft.TextField(hint_text="Сообщение...", expand=True)
+              def send(e):
+                  if msg.value:
+                      chat.controls.append(ft.Container(content=ft.Text(msg.value), bgcolor="#2B5278", padding=10, border_radius=10))
+                      msg.value = ""
+                      page.update()
+              page.add(ft.Text("FAZA ONLINE", size=20, weight="bold"), chat, ft.Row([msg, ft.IconButton(ft.icons.SEND, on_click=send)]))
+          ft.app(target=main)
+          EOF
       - name: Build APK
-        run: |
-          # Собираем без лишних команд, просто и чисто
-          flet build apk --yes
+        run: flet build apk --yes
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: faza-messenger-stable
+          name: faza-messenger
           path: build/apk/**/*.apk
           
