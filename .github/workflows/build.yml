@@ -19,12 +19,14 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
       - name: Install dependencies
-        run: pip install flet telethon
+        run: |
+          pip install flet telethon
       - name: Build APK
-        run: flet build apk --yes
+        run: |
+          flet build apk --yes
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: faza-app
+          name: faza-messenger-v1
           path: build/apk/**/*.apk
           
