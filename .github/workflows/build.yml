@@ -21,16 +21,13 @@ jobs:
       - name: Install dependencies
         run: |
           pip install flet telethon
-      - name: Prepare Flet Project
-        run: |
-          # Это создаст структуру, если её нет, не затирая main.py
-          flet create . --template briefy
       - name: Build APK
         run: |
+          # Собираем без лишних команд, просто и чисто
           flet build apk --yes
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: faza-messenger-final
+          name: faza-messenger-stable
           path: build/apk/**/*.apk
           
