@@ -7,29 +7,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-          
-      - name: Set up Java
-        uses: actions/setup-java@v4
+      - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
-          
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+      - uses: android-actions/setup-android@v3
+      
+      - name: Install Flet
+        run: pip install flet telethon
         
-      - name: Install Dependencies
+      - name: Build APK (Force Mode)
         run: |
-          pip install flet telethon
-          
-      - name: Build APK (Faza Edition)
-        run: |
-          # Собираем проект из текущей папки
-          flet build apk --project . --yes
+          # Принудительная инициализация и сборка
+          flet build apk --yes
           
       - name: Upload APK
         uses: actions/upload-artifact@v4
