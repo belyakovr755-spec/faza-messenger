@@ -1,0 +1,38 @@
+name: Build APK
+on: push
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install flet telethon
+          # Если есть файл зависимостей, установим и его
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Build APK
+        run: |
+          # 'yes |' заставит систему думать, что ты нажал "Enter" или "Y" на все вопросы
+          yes | flet build apk
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: faza-app
+          path: build/apk/*.apk
+          
